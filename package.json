@@ -2,9 +2,9 @@
   "name": "MCServer",
   "packageManager": "yarn@3.4.1",
   "dependencies": {
+    "@prisma/client": "^4.10.1",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
-    "prisma": "^4.10.1"
+    "express": "^4.18.2"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -15,11 +15,17 @@
     "concurrently": "^7.6.0",
     "eslint": "^8.34.0",
     "nodemon": "^2.0.20",
+    "prisma": "^4.10.1",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   },
   "scripts": {
     "build": "yarn tsc",
     "start": "node dist/index.js",
     "dev": "concurrently \"yarn tsc --watch\" \"nodemon -q dist/index.js\""
+  },
+  "prisma": {
+    "schema": "./Sources/prisma/schema.prisma",
+    "seed": "ts-node Sources/prisma/seed.ts"
   }
 }

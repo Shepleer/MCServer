@@ -6,7 +6,7 @@
 !.yarn/versions
 
 # Documentation here: https://yarnpkg.com/features/zero-installs
-# !.yarn/cache
+.yarn/cache
 .pnp.*
 
 # Environment file
@@ -14,3 +14,4 @@
 
 # Compiled TS Code
 /dist/*
+node_modules

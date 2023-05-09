@@ -1,0 +1,145 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Schedule {
+  id          Int      @id @default(autoincrement())
+  name        String
+  fromHours   Int
+  toHours     Int
+  fromWeekDay Int
+  toWeekDay   Int
+  doctors     Doctor[]
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+}
+
+model Manager {
+  id             Int     @id @default(autoincrement())
+  profilePicture String?
+  email          String  @unique
+  password       String
+  passportId     String  @unique
+  firstName      String
+  lastName       String
+  middleName     String
+  clinic         Clinic  @relation(fields: [clinicId], references: [id])
+  clinicId       Int
+}
+
+model Patient {
+  id             Int           @id @default(autoincrement())
+  profilePicture String?
+  email          String        @unique
+  password       String
+  phoneNumber    String
+  passportId     String        @unique
+  firstName      String
+  lastName       String
+  middleName     String
+  gender         Gender
+  age            Int
+  appointments   Appointment[]
+}
+
+enum MedicineBranch {
+  ALLERGOLOGY
+  GASTROENTEROLOGY
+  HEMATOLOGY
+  HEPATOLOGY
+  GYNECOLOGY
+  DERMATOLOGY
+  IMMUNOLOGY
+  CARDIOLOGY
+  COSMETOLOGY
+  NEUROLOGY
+  NEPHROLOGY
+  ONCOLOGY
+  OTORHINOLARYNGOLOGY
+  OPHTHALMOLOGY
+  PEDIATRICS
+  PSYCHOLOGY
+  PSYCHOTHERAPY
+  SEXOLOGY
+  DENTISTRY
+  THERAPY
+  TRAUMATOLOGY_AND_ORTHOPEDICS
+  UROLOGY
+  SURGERY
+  ENDOCRINOLOGY
+}
+
+model Doctor {
+  id             Int            @id @default(autoincrement())
+  profilePicture String?
+  email          String         @unique
+  password       String
+  firstName      String
+  lastName       String
+  middleName     String
+  gender         Gender
+  branch         MedicineBranch
+  appointments   Appointment[]
+  schedule       Schedule       @relation(fields: [scheduleId], references: [id])
+  scheduleId     Int
+  clinic         Clinic         @relation(fields: [clinicId], references: [id])
+  clinicId       Int
+}
+
+model Clinic {
+  id          Int       @id @default(autoincrement())
+  name        String
+  latitude    Float
+  longitude   Float
+  phoneNumber String
+  doctors     Doctor[]
+  managers    Manager[]
+}
+
+enum AppointmentStatus {
+  REGISTERED
+  CONFIRMED
+  IN_PROGRESS
+  CANCELED
+  COMPLETED
+}
+
+enum AppointmentType {
+  OFFLINE
+  ONLINE
+}
+
+model Appointment {
+  id        Int               @id @default(autoincrement())
+  type      AppointmentType   @default(OFFLINE)
+  status    AppointmentStatus @default(REGISTERED)
+  date      DateTime
+  endDate   DateTime
+  doctor    Doctor            @relation(fields: [doctorId], references: [id])
+  doctorId  Int
+  patient   Patient           @relation(fields: [patientId], references: [id])
+  patientId Int
+  // appointment location, null if appointment type is online, 
+  location  Int?
+  // appointment report, null if status is not COMPLETED
+  report    Report?
+}
+
+model Report {
+  id            Int         @id @default(autoincrement())
+  // ICD-10
+  diagnosis     String
+  description   String
+  date          DateTime
+  appointment   Appointment @relation(fields: [appointmentId], references: [id])
+  appointmentId Int         @unique
+}

@@ -3,12 +3,24 @@
   "packageManager": "yarn@3.4.1",
   "dependencies": {
     "@prisma/client": "^4.10.1",
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "express-jwt": "^8.4.1",
+    "jsonwebtoken": "^9.0.0",
+    "multer": "^1.4.5-lts.1"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/body-parser": "^1.19.2",
+    "@types/cors": "^2.8.13",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.17",
+    "@types/express-jwt": "^7.4.2",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/multer": "^1.4.7",
     "@types/node": "^18.14.0",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
@@ -25,7 +37,7 @@
     "dev": "concurrently \"yarn tsc --watch\" \"nodemon -q dist/index.js\""
   },
   "prisma": {
-    "schema": "./Sources/prisma/schema.prisma",
-    "seed": "ts-node Sources/prisma/seed.ts"
+    "schema": "./src/prisma/schema.prisma",
+    "seed": "ts-node src/prisma/seed.ts"
   }
 }

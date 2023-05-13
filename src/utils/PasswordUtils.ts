@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 const SPECIAL_CHARACTERS = "@$!%*?&";
 const LETTERS = "abcdefghijklmnopqrstuvwxyz";
 const NUMBERS = "0123456789";
@@ -43,8 +45,15 @@ function generatePassword(): string {
     }
 
     let ss = shuffleString(randomString);
-    console.log("DEBUGGLL ", ss);
     return ss;
+}
+
+function comparePassword(password: string, hash: string): boolean {
+    return bcrypt.compareSync(password, hash);
+}
+
+function encryptPassword(password: string): string {
+    return bcrypt.hashSync(password, 10);
 }
 
 function validatePassword(password: string): boolean {
@@ -57,4 +66,4 @@ function validatePassword(password: string): boolean {
     return false;
 }
 
-export { generatePassword, validatePassword };
+export { generatePassword, validatePassword, encryptPassword, comparePassword };

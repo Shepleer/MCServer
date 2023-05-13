@@ -4,7 +4,7 @@ import { clinicsPayload } from "./seed/clinics";
 import { makeCSVDoctors } from "./seed/doctors";
 import { makeCSVManagers } from "./seed/managers";
 import { makeCSVPatients } from "./seed/patients";
-import { generatePassword, validatePassword } from "./seed/utils/PasswordUtils";
+import { encryptPassword, generatePassword, validatePassword } from "../utils/PasswordUtils";
 import { assert } from "console";
 import { medicineBranchFromRawValue } from "./seed/utils/MedicineBranch+rawValue";
 
@@ -44,8 +44,7 @@ async function main() {
 
     assert(validatePassword(password), "Invalid password");
 
-    console.log(allSchedules);
-    console.log(allClinics);
+    const encryptedPassword = encryptPassword(password);
 
     const doctorsPayload = await makeCSVDoctors();
 
@@ -59,11 +58,11 @@ async function main() {
         const scheduleId = allSchedules[scheduleGroupNumber].id;
         const clinicId = allClinics[clinicGroupNumber].id
 
-        let result = await prisma.doctor.create({
+        await prisma.doctor.create({
             data: {
                 profilePicture: profilePicture,
                 email: email,
-                password: password,
+                password: encryptedPassword,
                 firstName: firstName,
                 lastName: lastName,
                 middleName: middleName,
@@ -81,8 +80,6 @@ async function main() {
                 }
             }
         });
-
-        console.log(result);
     });
 
     const patientsPayload = await makeCSVPatients();
@@ -90,10 +87,10 @@ async function main() {
     patientsPayload.forEach(async (payload) => {
         const { email, passportId, firstName, lastName, middleName, phoneNumber, age, gender } = payload;
 
-        const result = await prisma.patient.create({
+        await prisma.patient.create({
             data: {
                 email: email,
-                password: password,
+                password: encryptedPassword,
                 phoneNumber: phoneNumber,
                 passportId: passportId,
                 firstName: firstName,
@@ -103,9 +100,7 @@ async function main() {
                 age: age,
             }
         });
-
-        console.log(result);
-    }); 
+    });
 
     const managersPayload = await makeCSVManagers();
 
@@ -115,10 +110,10 @@ async function main() {
         const clinicGroupNumber = (index + 1) % clinicsCount;
         const clinicId = allClinics[clinicGroupNumber].id
 
-        const result = await prisma.manager.create({
+        await prisma.manager.create({
             data: {
                 email: email,
-                password: password,
+                password: encryptedPassword,
                 passportId: passportId,
                 firstName: firstName,
                 lastName: lastName,
@@ -130,8 +125,6 @@ async function main() {
                 }
             }
         });
-
-        console.log(result);
     });
 }
 

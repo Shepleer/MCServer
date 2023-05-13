@@ -17,25 +17,16 @@ class CSVPropertyDecoder {
     }
 
     getValue<T>(key: string): T {
-        console.log(this.codingKeys);
-        console.log(this.values);
-
         const index = this.codingKeys.findIndex((value) => {
-            console.log(value + "   " + key);
-            console.log(value === key);
             if (value === key) {
-                console.log("all good")
                 return true;
             }
             return false;
         });
 
-        console.log(index);
-
         if (index != -1) {
             return this.values[index] as T;
         } else {
-            console.log("fuck")
             throw new Error(`Invalid key has been reached decoder, key: ${key}`);
         }
     }

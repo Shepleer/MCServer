@@ -11,6 +11,7 @@
 
 # Environment file
 .env
+secrets/*
 
 # Compiled TS Code
 /dist/*

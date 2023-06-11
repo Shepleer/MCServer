@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import express, { Express, Router } from "express";
 import { Request } from "../jwtMiddleware";
 import { PatientService } from "../services/orm/patientService";
@@ -25,20 +26,41 @@ patientsRouter.get('/findMany', async (req: Request, res) => {
     });
 
     const response = ResponseUtils.success(patients);
+    res.json(response);
+});
+
+patientsRouter.post('/create', async (req, res) => {
+    const payload = req.body.patient as Prisma.PatientCreateInput;
+    const patient = await PatientService.createPatient(payload);
+
+    const response = ResponseUtils.success(patient);
+    res.json(response);
+});
+
+patientsRouter.post('/update/:patientId', async (req, res) => {
+    const patientId = Number(req.params.patientId);
+    const payload = req.body.patient as Prisma.PatientUpdateInput;
+    const patient = await PatientService.updatePatient({
+            id: patientId
+        },
+        {
+            ...payload,
+        },
+    );
+
+    const response = ResponseUtils.success(patient);
 
     res.json(response);
 });
 
-patientsRouter.post('/create', (req, res) => {
-    
-});
+patientsRouter.delete('/delete/:patientId', async (req: Request, res) => {
+    const patientId = Number(req.params.patientId);
+    const patient = await PatientService.deletePatient({
+        id: patientId
+    });
 
-patientsRouter.put('/update', (req, res) => {
-
-});
-
-patientsRouter.delete('/delete', () => {
-
+    const response = ResponseUtils.success(patient);
+    res.json(response);
 });
 
 export { patientsRouter };

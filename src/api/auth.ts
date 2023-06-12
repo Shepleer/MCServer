@@ -6,15 +6,10 @@ import { ResponseUtils } from "../utils/ResponseUtils";
 import { comparePassword } from "../utils/PasswordUtils";
 import { JwtSecurity } from "../utils/Security";
 import { Doctor, Manager, Patient } from "@prisma/client";
+import { UserKind } from "../models/AuthPayload";
 
 enum AuthError {
     InvalidCredentials = 'InvalidCredentials'
-}
-
-enum UserKind {
-    PATIENT = 'PATIENT',
-    DOCTOR = 'DOCTOR',
-    MANAGER = 'MANAGER'
 }
 
 const authRouter = Router();

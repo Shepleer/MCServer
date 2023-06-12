@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import Jwt from 'jsonwebtoken';
+import { AuthPayload } from '../models/AuthPayload';
 
 const ACCESS_PRIVATE_KEY_SECRET_PATH = path.resolve('secrets/access.key');
 const REFRESH_PRIVATE_KEY_SECRET_PATH = path.resolve('secrets/refresh.key');
@@ -8,7 +9,7 @@ const ACCESS_PUBLIC_KEY_SECRET_PATH = path.resolve('secrets/access.public.key');
 const REFRESH_PUBLIC_KEY_SECRET_PATH = path.resolve('secrets/refresh.public.key');
 
 class JwtSecurity {
-    static async generateTokens(payload: Object) {
+    static async generateTokens(payload: AuthPayload) {
         const result = await Promise.all([this.generateAccessToken(payload), this.generateRefreshToken(payload)]);
         return {
             accessToken: result[0],

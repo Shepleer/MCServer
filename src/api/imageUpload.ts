@@ -3,8 +3,6 @@ import { ApiErrorType, ResponseUtils } from "../utils/ResponseUtils";
 import multer from "multer";
 import path from "path";
 
-
-
 const uploadImageRouter = Router()
 
 const destination = path.resolve('public/assets');

@@ -3,21 +3,22 @@ import Jwt from "jsonwebtoken";
 import { ResponseUtils } from "./utils/ResponseUtils";
 import { IncomingHttpHeaders } from "http";
 import { JwtSecurity } from "./utils/Security";
+import { AuthPayload } from "./models/AuthPayload";
 
 enum AuthError {
     InvalidToken = 'InvalidToken',
     TokenExpired = 'TokenExpired'
 };
 
-export type Request<T = Jwt.JwtPayload> =
-  express.Request & { auth?: T };
+export type Request =
+  express.Request & { auth?: AuthPayload };
 
 export function jwtMiddleware() {
     const middleware = async (req: Request, res: express.Response, next: express.NextFunction) => {
         try {
             const token = parseToken(req.headers);
             try {
-                const payload = await JwtSecurity.verifyAccessToken(token) as Jwt.JwtPayload;
+                const payload = await JwtSecurity.verifyAccessToken(token) as AuthPayload;
                 req.auth = payload;
                 return next();
             } catch (err) {
